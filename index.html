@@ -7,11 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{
---bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a24;
---cyan:#00f5d4;--pink:#f72585;--yellow:#ffd60a;
---text:#e8e8f0;--text2:#9090a8;--border:#2a2a3a;
-}
+:root{--bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a24;--cyan:#00f5d4;--pink:#f72585;--yellow:#ffd60a;--text:#e8e8f0;--text2:#9090a8;--border:#2a2a3a}
 body{background:var(--bg);color:var(--text);font-family:'Noto Sans TC',sans-serif;min-height:100vh}
 .stars{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
 .star{position:absolute;background:#fff;border-radius:50%;animation:twinkle var(--d) ease-in-out infinite}
@@ -40,16 +36,19 @@ header{position:relative;z-index:10;display:flex;align-items:center;justify-cont
 .rank-num.r2{color:#c0c0c0}
 .rank-num.r3{color:#cd7f32}
 .rank-num.rn{color:var(--text2)}
-.thumb{width:3.5rem;height:3.5rem;background:var(--bg3);border-radius:.3rem;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
-.thumb-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:var(--text2)}
+.thumb{width:3.5rem;height:3.5rem;background:var(--bg3);border-radius:.3rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.thumb-icon{font-size:1.2rem;color:var(--text2)}
 .rank-info{min-width:0}
 .rank-account{font-size:.85rem;font-weight:500;color:var(--cyan);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rank-caption{font-size:.75rem;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:.2rem}
 .rank-tags{display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.3rem}
 .tag{font-size:.65rem;padding:.15rem .4rem;border-radius:.2rem;background:rgba(0,245,212,.08);color:var(--cyan);border:1px solid rgba(0,245,212,.2)}
-.rank-views{text-align:right;flex-shrink:0}
+.rank-stats{text-align:right;flex-shrink:0}
 .views-num{font-family:'Space Grotesk',sans-serif;font-size:.95rem;font-weight:700;color:var(--text)}
 .views-label{font-size:.65rem;color:var(--text2);margin-top:.1rem}
+.stat-row{display:flex;gap:.6rem;justify-content:flex-end;margin-top:.2rem}
+.stat-item{font-size:.68rem;color:var(--text2)}
+.stat-item span{color:var(--text)}
 .sidebar{}
 .keyword-card{background:var(--bg2);border:1px solid var(--border);border-radius:.5rem;padding:1rem}
 .keyword-list{display:flex;flex-direction:column;gap:.5rem;margin-top:.5rem}
@@ -64,9 +63,9 @@ header{position:relative;z-index:10;display:flex;align-items:center;justify-cont
 @keyframes spin{to{transform:rotate(360deg)}}
 .empty{text-align:center;padding:3rem;color:var(--text2);font-size:.9rem}
 .daily-section{margin-top:1.5rem}
-.daily-card{background:linear-gradient(135deg,rgba(247,37,133,.08),rgba(0,245,212,.08));border:1px solid rgba(247,37,133,.3);border-radius:.5rem;padding:1rem;margin-bottom:1rem}
+.daily-card{background:linear-gradient(135deg,rgba(247,37,133,.08),rgba(0,245,212,.08));border:1px solid rgba(247,37,133,.3);border-radius:.5rem;padding:1rem}
 .daily-title{font-size:.7rem;letter-spacing:.1em;color:var(--pink);text-transform:uppercase;font-family:'Space Grotesk',sans-serif;margin-bottom:.6rem}
-.daily-item{display:flex;align-items:center;gap:.6rem;padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.daily-item{display:flex;align-items:center;gap:.6rem;padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.05);text-decoration:none;color:inherit}
 .daily-item:last-child{border-bottom:none}
 .daily-num{font-family:'Space Grotesk',sans-serif;font-size:.8rem;font-weight:700;color:var(--pink);width:1.5rem;flex-shrink:0}
 .daily-acc{font-size:.8rem;color:var(--cyan);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -87,11 +86,11 @@ header{position:relative;z-index:10;display:flex;align-items:center;justify-cont
   <div>
     <div class="platform-tabs">
       <button class="tab active" onclick="switchPlatform('instagram',this)">📷 Instagram</button>
-      <button class="tab" onclick="switchPlatform('tiktok',this)">🎵 TikTok</button>
       <button class="tab" onclick="switchPlatform('threads',this)">🧵 Threads</button>
+      <button class="tab" onclick="switchPlatform('tiktok',this)">🎵 TikTok</button>
     </div>
     <div class="date-tabs" id="dateTabs"></div>
-    <div class="section-title" id="sectionTitle">即時熱門榜 TOP 100</div>
+    <div class="section-title" id="sectionTitle">即時熱門榜</div>
     <div class="rank-list" id="rankList"><div class="loading"><div class="spinner"></div>載入中...</div></div>
   </div>
   <div class="sidebar">
@@ -111,10 +110,8 @@ header{position:relative;z-index:10;display:flex;align-items:center;justify-cont
 const SUPABASE_URL='https://uxpbbcbclkragxbvkkze.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4cGJiY2JjbGtyYWd4YnZra3plIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyODY4NjksImV4cCI6MjA5Mjg2Mjg2OX0.ciZaeMtaDv_vpMRHN0SgEzLsWi-4AT-sS7leolQYC1w';
 const headers={'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY};
-
 let currentPlatform='instagram';
 let currentDate='today';
-let availableDates=[];
 
 function formatNum(n){
   if(!n||n===0)return'-';
@@ -130,10 +127,20 @@ async function fetchJSON(path){
   return r.json();
 }
 
+function getThumbIcon(platform){
+  if(platform==='instagram') return '▶';
+  if(platform==='threads') return '🧵';
+  return '▶';
+}
+
+function getViewLabel(platform){
+  if(platform==='threads') return '瀏覽';
+  return '觀看';
+}
+
 async function loadDates(){
   const data=await fetchJSON('videos?select=fetch_date&platform=eq.'+currentPlatform+'&order=fetch_date.desc&limit=1000');
   const dates=[...new Set(data.map(d=>d.fetch_date))].slice(0,7);
-  availableDates=dates;
   const el=document.getElementById('dateTabs');
   el.innerHTML='<button class="date-tab active" onclick="switchDate(\'today\',this)">今日</button>';
   dates.forEach(d=>{
@@ -151,25 +158,29 @@ async function loadRanking(){
   const el=document.getElementById('rankList');
   el.innerHTML='<div class="loading"><div class="spinner"></div>載入中...</div>';
   const date=currentDate==='today'?today():currentDate;
-  const data=await fetchJSON('videos?select=*&platform=eq.'+currentPlatform+'&fetch_date=eq.'+date+'&order=views.desc&limit=100');
+  const limit=currentPlatform==='threads'?100:50;
+  const data=await fetchJSON('videos?select=*&platform=eq.'+currentPlatform+'&fetch_date=eq.'+date+'&order=views.desc&limit='+limit);
   if(!data||!data.length){el.innerHTML='<div class="empty">暫無資料</div>';return;}
   document.getElementById('sectionTitle').textContent='即時熱門榜 TOP '+data.length;
   el.innerHTML=data.map((v,i)=>{
     const rankClass=i===0?'r1':i===1?'r2':i===2?'r3':'rn';
     const isTop3=i<3?' top3':'';
-    const tags=(v.hashtags||[]).slice(0,3).map(t=>'<span class="tag">'+t.replace(/^#/,'#')+'</span>').join('');
+    const tags=(v.hashtags||[]).slice(0,3).map(t=>'<span class="tag">'+t+'</span>').join('');
     const cap=v.caption?v.caption.slice(0,40)+'...':'（無說明文字）';
+    const likesRow=v.likes>0?'<div class="stat-item">❤ <span>'+formatNum(v.likes)+'</span></div>':'';
+    const commentsRow=v.comments>0?'<div class="stat-item">💬 <span>'+formatNum(v.comments)+'</span></div>':'';
     return `<a class="rank-item${isTop3}" href="${v.video_url}" target="_blank">
       <div class="rank-num ${rankClass}">${i+1}</div>
-      <div class="thumb"><div class="thumb-placeholder">▶</div></div>
+      <div class="thumb"><div class="thumb-icon">${getThumbIcon(currentPlatform)}</div></div>
       <div class="rank-info">
         <div class="rank-account">${v.account_name||'@unknown'}</div>
         <div class="rank-caption">${cap}</div>
         <div class="rank-tags">${tags}</div>
       </div>
-      <div class="rank-views">
+      <div class="rank-stats">
         <div class="views-num">${formatNum(v.views)}</div>
-        <div class="views-label">觀看</div>
+        <div class="views-label">${getViewLabel(currentPlatform)}</div>
+        <div class="stat-row">${likesRow}${commentsRow}</div>
       </div>
     </a>`;
   }).join('');
@@ -196,7 +207,7 @@ async function loadDaily(){
   const data=await fetchJSON('videos?select=account_name,views,video_url&platform=eq.'+currentPlatform+'&fetch_date=eq.'+date+'&order=views.desc&limit=10');
   if(!data||!data.length){el.innerHTML='<div style="color:var(--text2);font-size:.8rem">暫無資料</div>';return;}
   el.innerHTML=data.map((v,i)=>`
-    <a class="daily-item" href="${v.video_url}" target="_blank" style="text-decoration:none">
+    <a class="daily-item" href="${v.video_url}" target="_blank">
       <div class="daily-num">${i+1}</div>
       <div class="daily-acc">${v.account_name||'@unknown'}</div>
       <div class="daily-views">${formatNum(v.views)}</div>
@@ -205,6 +216,7 @@ async function loadDaily(){
 
 function switchPlatform(p,btn){
   currentPlatform=p;
+  currentDate='today';
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   btn.classList.add('active');
   loadAll();
