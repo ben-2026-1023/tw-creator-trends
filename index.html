@@ -1,1 +1,251 @@
-<h1>維護中</h1>
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台灣創作者趨勢榜</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a24;
+--cyan:#00f5d4;--pink:#f72585;--yellow:#ffd60a;
+--text:#e8e8f0;--text2:#9090a8;--border:#2a2a3a;
+}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans TC',sans-serif;min-height:100vh}
+.stars{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+.star{position:absolute;background:#fff;border-radius:50%;animation:twinkle var(--d) ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:.1}50%{opacity:.8}}
+header{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 2rem;border-bottom:1px solid var(--border);background:rgba(10,10,15,.9);backdrop-filter:blur(12px)}
+.logo{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:.05em;color:var(--cyan)}
+.logo span{color:var(--text2)}
+.live-badge{display:flex;align-items:center;gap:.4rem;font-size:.75rem;color:var(--cyan);border:1px solid var(--cyan);padding:.3rem .7rem;border-radius:2rem}
+.live-dot{width:6px;height:6px;background:var(--cyan);border-radius:50%;animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+.clock{font-family:'Space Grotesk',sans-serif;font-size:.85rem;color:var(--text2)}
+.main{position:relative;z-index:10;display:grid;grid-template-columns:1fr 280px;gap:1.5rem;padding:1.5rem 2rem;max-width:1400px;margin:0 auto}
+.platform-tabs{display:flex;gap:.5rem;margin-bottom:1.2rem}
+.tab{padding:.5rem 1.2rem;border-radius:.4rem;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:.85rem;transition:all .2s}
+.tab.active{background:var(--cyan);color:#000;border-color:var(--cyan);font-weight:700}
+.date-tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.2rem}
+.date-tab{padding:.35rem .8rem;border-radius:.3rem;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-size:.78rem;font-family:'Noto Sans TC',sans-serif;transition:all .2s}
+.date-tab.active{border-color:var(--cyan);color:var(--cyan)}
+.section-title{font-size:.7rem;letter-spacing:.15em;color:var(--text2);text-transform:uppercase;margin-bottom:.8rem;font-family:'Space Grotesk',sans-serif}
+.rank-list{display:flex;flex-direction:column;gap:.6rem}
+.rank-item{display:grid;grid-template-columns:2.5rem 3.5rem 1fr auto;align-items:center;gap:.8rem;padding:.8rem 1rem;background:var(--bg2);border:1px solid var(--border);border-radius:.5rem;transition:border-color .2s;cursor:pointer;text-decoration:none;color:inherit}
+.rank-item:hover{border-color:var(--cyan)}
+.rank-item.top3{border-color:rgba(0,245,212,.25)}
+.rank-num{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:700;text-align:center}
+.rank-num.r1{color:var(--yellow)}
+.rank-num.r2{color:#c0c0c0}
+.rank-num.r3{color:#cd7f32}
+.rank-num.rn{color:var(--text2)}
+.thumb{width:3.5rem;height:3.5rem;background:var(--bg3);border-radius:.3rem;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+.thumb-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:var(--text2)}
+.rank-info{min-width:0}
+.rank-account{font-size:.85rem;font-weight:500;color:var(--cyan);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rank-caption{font-size:.75rem;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:.2rem}
+.rank-tags{display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.3rem}
+.tag{font-size:.65rem;padding:.15rem .4rem;border-radius:.2rem;background:rgba(0,245,212,.08);color:var(--cyan);border:1px solid rgba(0,245,212,.2)}
+.rank-views{text-align:right;flex-shrink:0}
+.views-num{font-family:'Space Grotesk',sans-serif;font-size:.95rem;font-weight:700;color:var(--text)}
+.views-label{font-size:.65rem;color:var(--text2);margin-top:.1rem}
+.sidebar{}
+.keyword-card{background:var(--bg2);border:1px solid var(--border);border-radius:.5rem;padding:1rem}
+.keyword-list{display:flex;flex-direction:column;gap:.5rem;margin-top:.5rem}
+.kw-item{display:flex;align-items:center;gap:.6rem}
+.kw-rank{font-family:'Space Grotesk',sans-serif;font-size:.7rem;color:var(--text2);width:1.2rem;text-align:right;flex-shrink:0}
+.kw-bar-wrap{flex:1;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.kw-bar{height:100%;background:var(--cyan);border-radius:2px;transition:width .5s ease}
+.kw-text{font-size:.78rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1}
+.kw-count{font-family:'Space Grotesk',sans-serif;font-size:.72rem;color:var(--text2);flex-shrink:0}
+.loading{text-align:center;padding:3rem;color:var(--text2)}
+.spinner{width:2rem;height:2rem;border:2px solid var(--border);border-top-color:var(--cyan);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty{text-align:center;padding:3rem;color:var(--text2);font-size:.9rem}
+.daily-section{margin-top:1.5rem}
+.daily-card{background:linear-gradient(135deg,rgba(247,37,133,.08),rgba(0,245,212,.08));border:1px solid rgba(247,37,133,.3);border-radius:.5rem;padding:1rem;margin-bottom:1rem}
+.daily-title{font-size:.7rem;letter-spacing:.1em;color:var(--pink);text-transform:uppercase;font-family:'Space Grotesk',sans-serif;margin-bottom:.6rem}
+.daily-item{display:flex;align-items:center;gap:.6rem;padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.daily-item:last-child{border-bottom:none}
+.daily-num{font-family:'Space Grotesk',sans-serif;font-size:.8rem;font-weight:700;color:var(--pink);width:1.5rem;flex-shrink:0}
+.daily-acc{font-size:.8rem;color:var(--cyan);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.daily-views{font-family:'Space Grotesk',sans-serif;font-size:.75rem;color:var(--text2)}
+@media(max-width:900px){.main{grid-template-columns:1fr}.sidebar{order:-1}}
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+<header>
+  <div class="logo">台灣創作者趨勢榜 <span>/ TW CREATOR TRENDS</span></div>
+  <div style="display:flex;align-items:center;gap:1rem">
+    <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+    <div class="clock" id="clock"></div>
+  </div>
+</header>
+<div class="main">
+  <div>
+    <div class="platform-tabs">
+      <button class="tab active" onclick="switchPlatform('instagram',this)">📷 Instagram</button>
+      <button class="tab" onclick="switchPlatform('tiktok',this)">🎵 TikTok</button>
+      <button class="tab" onclick="switchPlatform('threads',this)">🧵 Threads</button>
+    </div>
+    <div class="date-tabs" id="dateTabs"></div>
+    <div class="section-title" id="sectionTitle">即時熱門榜 TOP 100</div>
+    <div class="rank-list" id="rankList"><div class="loading"><div class="spinner"></div>載入中...</div></div>
+  </div>
+  <div class="sidebar">
+    <div class="keyword-card">
+      <div class="section-title">熱門關鍵詞</div>
+      <div class="keyword-list" id="keywordList"><div style="color:var(--text2);font-size:.8rem">載入中...</div></div>
+    </div>
+    <div class="daily-section">
+      <div class="daily-card">
+        <div class="daily-title">📊 今日前十名日榜</div>
+        <div id="dailyList"><div style="color:var(--text2);font-size:.8rem">載入中...</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const SUPABASE_URL='https://uxpbbcbclkragxbvkkze.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4cGJiY2JjbGtyYWd4YnZra3plIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyODY4NjksImV4cCI6MjA5Mjg2Mjg2OX0.ciZaeMtaDv_vpMRHN0SgEzLsWi-4AT-sS7leolQYC1w';
+const headers={'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY};
+
+let currentPlatform='instagram';
+let currentDate='today';
+let availableDates=[];
+
+function formatNum(n){
+  if(!n||n===0)return'-';
+  if(n>=10000)return(n/10000).toFixed(1)+'萬';
+  if(n>=1000)return(n/1000).toFixed(1)+'K';
+  return n.toLocaleString();
+}
+
+function today(){return new Date().toISOString().slice(0,10)}
+
+async function fetchJSON(path){
+  const r=await fetch(SUPABASE_URL+'/rest/v1/'+path,{headers});
+  return r.json();
+}
+
+async function loadDates(){
+  const data=await fetchJSON('videos?select=fetch_date&platform=eq.'+currentPlatform+'&order=fetch_date.desc&limit=1000');
+  const dates=[...new Set(data.map(d=>d.fetch_date))].slice(0,7);
+  availableDates=dates;
+  const el=document.getElementById('dateTabs');
+  el.innerHTML='<button class="date-tab active" onclick="switchDate(\'today\',this)">今日</button>';
+  dates.forEach(d=>{
+    if(d!==today()){
+      const b=document.createElement('button');
+      b.className='date-tab';
+      b.textContent=d.slice(5);
+      b.onclick=function(){switchDate(d,this)};
+      el.appendChild(b);
+    }
+  });
+}
+
+async function loadRanking(){
+  const el=document.getElementById('rankList');
+  el.innerHTML='<div class="loading"><div class="spinner"></div>載入中...</div>';
+  const date=currentDate==='today'?today():currentDate;
+  const data=await fetchJSON('videos?select=*&platform=eq.'+currentPlatform+'&fetch_date=eq.'+date+'&order=views.desc&limit=100');
+  if(!data||!data.length){el.innerHTML='<div class="empty">暫無資料</div>';return;}
+  document.getElementById('sectionTitle').textContent='即時熱門榜 TOP '+data.length;
+  el.innerHTML=data.map((v,i)=>{
+    const rankClass=i===0?'r1':i===1?'r2':i===2?'r3':'rn';
+    const isTop3=i<3?' top3':'';
+    const tags=(v.hashtags||[]).slice(0,3).map(t=>'<span class="tag">'+t.replace(/^#/,'#')+'</span>').join('');
+    const cap=v.caption?v.caption.slice(0,40)+'...':'（無說明文字）';
+    return `<a class="rank-item${isTop3}" href="${v.video_url}" target="_blank">
+      <div class="rank-num ${rankClass}">${i+1}</div>
+      <div class="thumb"><div class="thumb-placeholder">▶</div></div>
+      <div class="rank-info">
+        <div class="rank-account">${v.account_name||'@unknown'}</div>
+        <div class="rank-caption">${cap}</div>
+        <div class="rank-tags">${tags}</div>
+      </div>
+      <div class="rank-views">
+        <div class="views-num">${formatNum(v.views)}</div>
+        <div class="views-label">觀看</div>
+      </div>
+    </a>`;
+  }).join('');
+}
+
+async function loadKeywords(){
+  const el=document.getElementById('keywordList');
+  const date=currentDate==='today'?today():currentDate;
+  const data=await fetchJSON('keyword_stats?select=keyword,count&platform=eq.'+currentPlatform+'&date=eq.'+date+'&order=count.desc&limit=20');
+  if(!data||!data.length){el.innerHTML='<div style="color:var(--text2);font-size:.8rem">暫無資料</div>';return;}
+  const max=data[0].count||1;
+  el.innerHTML=data.map((k,i)=>`
+    <div class="kw-item">
+      <div class="kw-rank">${i+1}</div>
+      <div class="kw-text">#${k.keyword}</div>
+      <div class="kw-bar-wrap"><div class="kw-bar" style="width:${Math.round(k.count/max*100)}%"></div></div>
+      <div class="kw-count">${k.count}</div>
+    </div>`).join('');
+}
+
+async function loadDaily(){
+  const el=document.getElementById('dailyList');
+  const date=today();
+  const data=await fetchJSON('videos?select=account_name,views,video_url&platform=eq.'+currentPlatform+'&fetch_date=eq.'+date+'&order=views.desc&limit=10');
+  if(!data||!data.length){el.innerHTML='<div style="color:var(--text2);font-size:.8rem">暫無資料</div>';return;}
+  el.innerHTML=data.map((v,i)=>`
+    <a class="daily-item" href="${v.video_url}" target="_blank" style="text-decoration:none">
+      <div class="daily-num">${i+1}</div>
+      <div class="daily-acc">${v.account_name||'@unknown'}</div>
+      <div class="daily-views">${formatNum(v.views)}</div>
+    </a>`).join('');
+}
+
+function switchPlatform(p,btn){
+  currentPlatform=p;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  loadAll();
+}
+
+function switchDate(d,btn){
+  currentDate=d;
+  document.querySelectorAll('.date-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  loadRanking();
+  loadKeywords();
+}
+
+async function loadAll(){
+  await loadDates();
+  loadRanking();
+  loadKeywords();
+  loadDaily();
+}
+
+function updateClock(){
+  const now=new Date();
+  document.getElementById('clock').textContent=now.toLocaleTimeString('zh-TW',{hour12:false});
+}
+
+function makeStars(){
+  const el=document.getElementById('stars');
+  for(let i=0;i<80;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    const size=Math.random()*2+1;
+    s.style.cssText=`width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*4}s;animation-delay:${Math.random()*4}s`;
+    el.appendChild(s);
+  }
+}
+
+makeStars();
+updateClock();
+setInterval(updateClock,1000);
+setInterval(loadAll,120000);
+loadAll();
+</script>
+</body>
+</html>
