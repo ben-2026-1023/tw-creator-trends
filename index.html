@@ -3,225 +3,413 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>台灣創作者趨勢榜</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<title>台灣自媒體流量情報站</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#000;--cyan:#00f5d4;--pink:#f72585;--yellow:#ffd60a;--text:#e8e8f0;--text2:#aaaabc;--border:rgba(255,255,255,.12)}
-body{background:#000;color:var(--text);font-family:'Noto Sans TC',sans-serif;min-height:100vh;overflow-x:hidden}
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Grotesk:wght@400;600;700&display=swap');
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a26;
+    --border: rgba(255,255,255,0.08);
+    --text: #e8e8f0;
+    --text2: #8888aa;
+    --ig: #e1306c;
+    --threads: #ffffff;
+    --tiktok: #fe2c55;
+    --accent: #00d4ff;
+    --gold: #ffd700;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Noto Sans TC',sans-serif;min-height:100vh;overflow-x:hidden}
 
-#earthWrap{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:85vmin;height:85vmin;z-index:0;animation:earthSpin 35s linear infinite;opacity:.28;border-radius:50%;overflow:hidden}
-#earthWrap img{width:100%;height:100%;object-fit:cover;border-radius:50%}
-@keyframes earthSpin{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
-#earthGlow{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:90vmin;height:90vmin;z-index:0;border-radius:50%;box-shadow:0 0 80px 20px rgba(0,245,212,.04),0 0 200px 60px rgba(0,0,0,.8);pointer-events:none}
-#earthOverlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;background:radial-gradient(ellipse at center,rgba(0,0,0,.1) 0%,rgba(0,0,0,.8) 70%)}
+  /* 地球背景 */
+  #earthImg{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:80vmin;height:80vmin;z-index:0;animation:earthSpin 30s linear infinite;opacity:0.15;pointer-events:none}
+  #earthImg img{width:100%;height:100%;border-radius:50%;object-fit:cover}
+  @keyframes earthSpin{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
 
-#welcomePage{position:fixed;top:0;left:0;width:100%;height:100%;z-index:100;display:flex;align-items:center;justify-content:center}
-.welcome-box{text-align:center;padding:2.5rem;max-width:420px;width:90%;background:rgba(0,0,0,.7);border:1px solid rgba(0,245,212,.2);border-radius:1rem;backdrop-filter:blur(20px)}
-.welcome-logo{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:700;color:var(--cyan);letter-spacing:.15em;margin-bottom:.4rem}
-.welcome-sub{font-size:.8rem;color:var(--text2);margin-bottom:2rem;line-height:1.6}
-.welcome-line{width:50px;height:1px;background:var(--cyan);margin:0 auto 2rem;opacity:.5}
-.welcome-title{font-size:1.5rem;font-weight:700;margin-bottom:.4rem;color:#fff}
-.welcome-desc{font-size:.8rem;color:var(--text2);margin-bottom:1.5rem;line-height:1.6}
-.welcome-input{width:100%;padding:.9rem 1.2rem;background:rgba(255,255,255,.05);border:1px solid rgba(0,245,212,.3);border-radius:.5rem;color:#fff;font-family:'Noto Sans TC',sans-serif;font-size:1rem;outline:none;transition:border-color .2s;text-align:center}
-.welcome-input:focus{border-color:var(--cyan)}
-.welcome-input::placeholder{color:rgba(255,255,255,.3)}
-.welcome-btn{width:100%;margin-top:1rem;padding:.9rem;background:var(--cyan);color:#000;border:none;border-radius:.5rem;font-family:'Noto Sans TC',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:opacity .2s}
-.welcome-btn:hover{opacity:.85}
+  /* 星星 */
+  .stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+  .star{position:absolute;background:#fff;border-radius:50%;animation:twinkle var(--d,3s) ease-in-out infinite}
+  @keyframes twinkle{0%,100%{opacity:0.1}50%{opacity:0.8}}
 
-#mainPage{display:none;position:relative;z-index:10}
-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:1px solid var(--border);background:rgba(0,0,0,.75);backdrop-filter:blur(16px)}
-.logo{font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;letter-spacing:.05em;color:var(--cyan)}
-.logo span{color:rgba(255,255,255,.4)}
-.header-right{display:flex;align-items:center;gap:1rem}
-.user-greeting{font-size:.8rem;color:var(--text2)}
-.user-greeting span{color:var(--cyan);font-weight:500}
-.live-badge{display:flex;align-items:center;gap:.4rem;font-size:.72rem;color:var(--cyan);border:1px solid rgba(0,245,212,.4);padding:.25rem .6rem;border-radius:2rem;background:rgba(0,245,212,.05)}
-.live-dot{width:5px;height:5px;background:var(--cyan);border-radius:50%;animation:pulse 1.5s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.clock{font-family:'Space Grotesk',sans-serif;font-size:.82rem;color:var(--text2)}
-.main{display:grid;grid-template-columns:1fr 270px;gap:1.5rem;padding:1.5rem 2rem;max-width:1400px;margin:0 auto}
-.platform-tabs{display:flex;gap:.5rem;margin-bottom:1.2rem}
-.tab{display:flex;align-items:center;gap:.5rem;padding:.45rem 1rem;border-radius:.4rem;border:1px solid var(--border);background:rgba(0,0,0,.5);color:var(--text2);cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:.82rem;transition:all .2s;backdrop-filter:blur(8px)}
-.tab img{width:16px;height:16px;object-fit:contain;filter:grayscale(1) brightness(.5);transition:filter .2s;border-radius:3px}
-.tab.active{border-color:var(--cyan);color:#fff;background:rgba(0,245,212,.08)}
-.tab.active img{filter:none}
-.date-tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.2rem}
-.date-tab{padding:.3rem .7rem;border-radius:.3rem;border:1px solid var(--border);background:rgba(0,0,0,.4);color:var(--text2);cursor:pointer;font-size:.75rem;font-family:'Noto Sans TC',sans-serif;transition:all .2s}
-.date-tab.active{border-color:var(--cyan);color:var(--cyan);background:rgba(0,245,212,.06)}
-.section-title{font-size:.68rem;letter-spacing:.15em;color:var(--text2);text-transform:uppercase;margin-bottom:.8rem;font-family:'Space Grotesk',sans-serif}
-.rank-list{display:flex;flex-direction:column;gap:.5rem}
-.rank-item{display:grid;grid-template-columns:2.2rem 3rem 1fr auto;align-items:center;gap:.8rem;padding:.75rem 1rem;background:rgba(0,0,0,.55);border:1px solid var(--border);border-radius:.5rem;transition:all .2s;cursor:pointer;text-decoration:none;color:inherit;backdrop-filter:blur(8px)}
-.rank-item:hover{border-color:rgba(0,245,212,.4);background:rgba(0,245,212,.04)}
-.rank-item.top3{border-color:rgba(0,245,212,.2)}
-.rank-num{font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;text-align:center}
-.rank-num.r1{color:var(--yellow)}
-.rank-num.r2{color:#c0c0c0}
-.rank-num.r3{color:#cd7f32}
-.rank-num.rn{color:rgba(255,255,255,.25)}
-.thumb{width:3rem;height:3rem;background:rgba(255,255,255,.05);border-radius:.3rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1rem;color:var(--text2)}
-.rank-info{min-width:0}
-.rank-account{font-size:.83rem;font-weight:500;color:var(--cyan);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rank-caption{font-size:.72rem;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:.15rem}
-.rank-tags{display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.25rem}
-.tag{font-size:.62rem;padding:.1rem .35rem;border-radius:.2rem;background:rgba(0,245,212,.07);color:rgba(0,245,212,.8);border:1px solid rgba(0,245,212,.15)}
-.rank-stats{text-align:right;flex-shrink:0}
-.views-num{font-family:'Space Grotesk',sans-serif;font-size:.92rem;font-weight:700;color:#fff}
-.views-label{font-size:.62rem;color:var(--text2);margin-top:.1rem}
-.stat-row{display:flex;gap:.5rem;justify-content:flex-end;margin-top:.15rem}
-.stat-item{font-size:.65rem;color:var(--text2)}
-.stat-item span{color:rgba(255,255,255,.7)}
-.keyword-card{background:rgba(0,0,0,.6);border:1px solid var(--border);border-radius:.5rem;padding:1rem;backdrop-filter:blur(12px)}
-.keyword-list{display:flex;flex-direction:column;gap:.45rem;margin-top:.5rem}
-.kw-item{display:flex;align-items:center;gap:.5rem}
-.kw-rank{font-family:'Space Grotesk',sans-serif;font-size:.68rem;color:var(--text2);width:1rem;text-align:right;flex-shrink:0}
-.kw-bar-wrap{width:60px;height:3px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden;flex-shrink:0}
-.kw-bar{height:100%;background:var(--cyan);border-radius:2px}
-.kw-text{font-size:.75rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1}
-.kw-count{font-family:'Space Grotesk',sans-serif;font-size:.68rem;color:var(--text2);flex-shrink:0}
-.loading{text-align:center;padding:3rem;color:var(--text2)}
-.spinner{width:1.8rem;height:1.8rem;border:2px solid rgba(255,255,255,.1);border-top-color:var(--cyan);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1rem}
-@keyframes spin{to{transform:rotate(360deg)}}
-.empty{text-align:center;padding:3rem;color:var(--text2);font-size:.9rem}
-.daily-section{margin-top:1.2rem}
-.daily-card{background:rgba(0,0,0,.6);border:1px solid rgba(247,37,133,.2);border-radius:.5rem;padding:1rem;backdrop-filter:blur(12px)}
-.daily-title{font-size:.65rem;letter-spacing:.1em;color:var(--pink);text-transform:uppercase;font-family:'Space Grotesk',sans-serif;margin-bottom:.6rem}
-.daily-item{display:flex;align-items:center;gap:.5rem;padding:.35rem 0;border-bottom:1px solid rgba(255,255,255,.05);text-decoration:none;color:inherit}
-.daily-item:last-child{border-bottom:none}
-.daily-num{font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:700;color:var(--pink);width:1.2rem;flex-shrink:0}
-.daily-acc{font-size:.75rem;color:var(--cyan);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.daily-views{font-family:'Space Grotesk',sans-serif;font-size:.7rem;color:var(--text2)}
-@media(max-width:900px){.main{grid-template-columns:1fr}.sidebar{order:-1}}
+  /* 歡迎頁 */
+  #welcome{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px}
+  #welcome h1{font-size:clamp(1.5rem,4vw,2.5rem);font-weight:900;background:linear-gradient(135deg,var(--accent),#7b61ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;padding:0 20px}
+  #welcome p{color:var(--text2);font-size:0.95rem}
+  #welcome-form{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;padding:0 20px}
+  #nickname{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:12px 20px;border-radius:12px;font-size:1rem;font-family:inherit;outline:none;width:240px}
+  #nickname:focus{border-color:var(--accent)}
+  #enter-btn{background:linear-gradient(135deg,var(--accent),#7b61ff);border:none;color:#000;padding:12px 28px;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.2s}
+  #enter-btn:hover{opacity:0.85}
+
+  /* 主體 */
+  #main{position:relative;z-index:1;display:none;padding:0 0 60px}
+  
+  /* Header */
+  header{padding:20px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:rgba(10,10,15,0.8);backdrop-filter:blur(12px);position:sticky;top:0;z-index:10}
+  .logo{font-size:1.1rem;font-weight:900;background:linear-gradient(135deg,var(--accent),#7b61ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  #clock{font-size:0.8rem;color:var(--text2);font-family:'Space Grotesk',sans-serif}
+  #greeting{font-size:0.85rem;color:var(--accent)}
+
+  /* 平台 tabs */
+  .tabs{display:flex;gap:8px;padding:20px 24px 0;overflow-x:auto}
+  .tab{display:flex;align-items:center;gap:8px;padding:10px 20px;border-radius:12px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-size:0.9rem;font-weight:500;color:var(--text2);transition:all 0.2s;white-space:nowrap;font-family:inherit}
+  .tab img{width:20px;height:20px;object-fit:contain;border-radius:4px}
+  .tab.active{background:var(--surface2);color:var(--text);border-color:var(--accent)}
+  .tab:hover{border-color:rgba(0,212,255,0.4)}
+
+  /* 內容區 */
+  .content{display:none;padding:20px 24px;gap:20px}
+  .content.active{display:grid;grid-template-columns:1fr 300px}
+  @media(max-width:900px){.content.active{grid-template-columns:1fr}}
+
+  /* 排行榜區 */
+  .rankings-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+  .rankings-title{font-size:1rem;font-weight:700;color:var(--text)}
+  .update-time{font-size:0.75rem;color:var(--text2)}
+  .rank-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.3);color:var(--accent);padding:4px 10px;border-radius:20px;font-size:0.72rem}
+
+  /* 影片卡片 */
+  .video-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px;display:flex;gap:14px;cursor:pointer;transition:all 0.2s;margin-bottom:10px;text-decoration:none;color:inherit}
+  .video-card:hover{border-color:rgba(0,212,255,0.4);background:var(--surface2);transform:translateY(-1px)}
+  .rank-num{font-size:1.4rem;font-weight:900;color:var(--text2);min-width:36px;text-align:center;font-family:'Space Grotesk',sans-serif;line-height:1}
+  .rank-num.top1{color:var(--gold)}
+  .rank-num.top2{color:#c0c0c0}
+  .rank-num.top3{color:#cd7f32}
+  .card-info{flex:1;min-width:0}
+  .account-name{font-weight:700;font-size:0.95rem;margin-bottom:4px;color:var(--accent)}
+  .caption{font-size:0.82rem;color:var(--text2);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.5;margin-bottom:8px}
+  .hashtags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
+  .hashtag{background:rgba(123,97,255,0.15);color:#9d84ff;padding:2px 8px;border-radius:20px;font-size:0.72rem}
+  .stats{display:flex;gap:12px;font-size:0.78rem;color:var(--text2)}
+  .stat{display:flex;align-items:center;gap:4px}
+  .pub-date{font-size:0.72rem;color:var(--text2);margin-left:auto;align-self:flex-start;white-space:nowrap}
+
+  /* 右側欄 */
+  .sidebar{}
+  .sidebar-section{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:16px}
+  .sidebar-title{font-size:0.85rem;font-weight:700;margin-bottom:12px;color:var(--text)}
+  
+  /* 關鍵詞 */
+  .kw-item{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--border)}
+  .kw-item:last-child{border-bottom:none}
+  .kw-rank{font-size:0.72rem;color:var(--text2);min-width:20px;font-family:'Space Grotesk',sans-serif}
+  .kw-text{font-size:0.85rem;flex:1}
+  .kw-bar-wrap{width:60px;height:4px;background:var(--border);border-radius:2px}
+  .kw-bar{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent),#7b61ff)}
+  .kw-count{font-size:0.72rem;color:var(--text2);min-width:28px;text-align:right;font-family:'Space Grotesk',sans-serif}
+
+  /* 日榜 */
+  .top10-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);cursor:pointer;text-decoration:none;color:inherit}
+  .top10-item:last-child{border-bottom:none}
+  .top10-item:hover .top10-name{color:var(--accent)}
+  .top10-rank{font-size:0.75rem;font-weight:700;min-width:22px;font-family:'Space Grotesk',sans-serif}
+  .top10-info{flex:1;min-width:0}
+  .top10-name{font-size:0.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .top10-views{font-size:0.72rem;color:var(--text2);font-family:'Space Grotesk',sans-serif}
+
+  /* 日期切換 */
+  .date-nav{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+  .date-btn{background:var(--surface);border:1px solid var(--border);color:var(--text2);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:0.8rem;font-family:inherit}
+  .date-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .date-label{font-size:0.85rem;color:var(--text);font-weight:600}
+
+  /* Loading */
+  .loading{text-align:center;padding:40px;color:var(--text2);font-size:0.9rem}
+  .empty{text-align:center;padding:40px;color:var(--text2);font-size:0.85rem}
+
+  /* TikTok 標示 */
+  .tiktok-note{font-size:0.72rem;color:var(--text2);background:rgba(254,44,85,0.1);border:1px solid rgba(254,44,85,0.3);padding:6px 12px;border-radius:8px;margin-bottom:12px;display:inline-block}
 </style>
 </head>
 <body>
 
-<div id="earthWrap"><img src="dc8c969f838e3beeb1d593c57f9ec33c.jpg" alt="earth"></div>
-<div id="earthGlow"></div>
-<div id="earthOverlay"></div>
+<!-- 星星 -->
+<div class="stars" id="stars"></div>
 
-<div id="welcomePage">
-  <div class="welcome-box">
-    <div class="welcome-logo">TW CREATOR TRENDS</div>
-    <div class="welcome-sub">台灣創作者趨勢榜｜即時熱門內容情報</div>
-    <div class="welcome-line"></div>
-    <div class="welcome-title">你好，創作者 👋</div>
-    <div class="welcome-desc">輸入你的暱稱，開始探索今日台灣最熱門的內容</div>
-    <input class="welcome-input" id="nicknameInput" type="text" placeholder="輸入你的暱稱..." maxlength="20">
-    <button class="welcome-btn" onclick="enterSite()">進入榜單 →</button>
+<!-- 地球 -->
+<div id="earthImg"><img src="dc8c969f838e3beeb1d593c57f9ec33c.jpg" alt="earth"></div>
+
+<!-- 歡迎頁 -->
+<div id="welcome">
+  <h1>🌍 台灣自媒體流量情報站</h1>
+  <p>請輸入你的暱稱來開始使用</p>
+  <div id="welcome-form">
+    <input id="nickname" type="text" placeholder="輸入你的暱稱..." maxlength="20">
+    <button id="enter-btn" onclick="enterSite()">進入平台</button>
   </div>
 </div>
 
-<div id="mainPage">
-<header>
-  <div class="logo">台灣創作者趨勢榜 <span>/ TW CREATOR TRENDS</span></div>
-  <div class="header-right">
-    <div class="user-greeting">歡迎，<span id="userNameDisplay"></span></div>
-    <div class="live-badge"><div class="live-dot"></div>LIVE</div>
-    <div class="clock" id="clock"></div>
-  </div>
-</header>
-<div class="main">
-  <div>
-    <div class="platform-tabs">
-      <button class="tab active" onclick="switchPlatform('instagram',this)"><img src="ig-logo.png" alt="IG">Instagram</button>
-      <button class="tab" onclick="switchPlatform('threads',this)"><img src="threads-logo.png" alt="Threads">Threads</button>
-      <button class="tab" onclick="switchPlatform('tiktok',this)"><img src="tiktok-logo.png" alt="TikTok">TikTok</button>
+<!-- 主體 -->
+<div id="main">
+  <header>
+    <div class="logo">📊 台灣自媒體流量情報</div>
+    <div style="display:flex;align-items:center;gap:16px">
+      <span id="greeting"></span>
+      <span id="clock"></span>
     </div>
-    <div class="date-tabs" id="dateTabs"></div>
-    <div class="section-title" id="sectionTitle">即時熱門榜</div>
-    <div class="rank-list" id="rankList"><div class="loading"><div class="spinner"></div>載入中...</div></div>
-  </div>
-  <div class="sidebar">
-    <div class="keyword-card">
-      <div class="section-title">熱門關鍵詞</div>
-      <div class="keyword-list" id="keywordList"><div style="color:var(--text2);font-size:.8rem">載入中...</div></div>
+  </header>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchPlatform('instagram')" id="tab-instagram">
+      <img src="ig-logo.png" alt="IG"> Instagram
     </div>
-    <div class="daily-section">
-      <div class="daily-card">
-        <div class="daily-title">📊 今日前十名日榜</div>
-        <div id="dailyList"><div style="color:var(--text2);font-size:.8rem">載入中...</div></div>
+    <div class="tab" onclick="switchPlatform('threads')" id="tab-threads">
+      <img src="threads-logo.png" alt="Threads" style="border-radius:50%"> Threads
+    </div>
+    <div class="tab" onclick="switchPlatform('tiktok')" id="tab-tiktok">
+      <img src="tiktok-logo.png" alt="TikTok"> TikTok
+    </div>
+  </div>
+
+  <!-- IG 內容 -->
+  <div class="content active" id="content-instagram">
+    <div>
+      <div class="rankings-header">
+        <div>
+          <div class="rankings-title">🔥 本週 Instagram Reels 熱門榜</div>
+          <div class="update-time">每2小時更新 · 僅顯示7天內發布</div>
+        </div>
+        <div class="date-nav">
+          <button class="date-btn" onclick="changeDate('instagram',-1)">◀</button>
+          <span class="date-label" id="date-instagram"></span>
+          <button class="date-btn" onclick="changeDate('instagram',1)">▶</button>
+        </div>
+      </div>
+      <div id="list-instagram" class="loading">載入中...</div>
+    </div>
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title">🏆 今日前十名</div>
+        <div id="top10-instagram" class="loading">載入中...</div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-title">🔑 熱門關鍵詞</div>
+        <div id="kw-instagram" class="loading">載入中...</div>
       </div>
     </div>
   </div>
-</div>
+
+  <!-- Threads 內容 -->
+  <div class="content" id="content-threads">
+    <div>
+      <div class="rankings-header">
+        <div>
+          <div class="rankings-title">🔥 本週 Threads 熱門榜</div>
+          <div class="update-time">每2小時更新 · 僅顯示7天內發布 · 依瀏覽數排行</div>
+        </div>
+        <div class="date-nav">
+          <button class="date-btn" onclick="changeDate('threads',-1)">◀</button>
+          <span class="date-label" id="date-threads"></span>
+          <button class="date-btn" onclick="changeDate('threads',1)">▶</button>
+        </div>
+      </div>
+      <div id="list-threads" class="loading">載入中...</div>
+    </div>
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title">🏆 今日前十名</div>
+        <div id="top10-threads" class="loading">載入中...</div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-title">🔑 熱門關鍵詞</div>
+        <div id="kw-threads" class="loading">載入中...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TikTok 內容 -->
+  <div class="content" id="content-tiktok">
+    <div>
+      <div class="rankings-header">
+        <div>
+          <div class="rankings-title">🔥 本週 TikTok 熱門榜</div>
+          <div class="update-time">每2小時更新 · 僅顯示7天內發布</div>
+        </div>
+        <div class="date-nav">
+          <button class="date-btn" onclick="changeDate('tiktok',-1)">◀</button>
+          <span class="date-label" id="date-tiktok"></span>
+          <button class="date-btn" onclick="changeDate('tiktok',1)">▶</button>
+        </div>
+      </div>
+      <div class="tiktok-note">⚠️ TikTok 依讚數排行</div>
+      <div id="list-tiktok" class="loading">載入中...</div>
+    </div>
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title">🏆 今日前十名</div>
+        <div id="top10-tiktok" class="loading">載入中...</div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-title">🔑 熱門關鍵詞</div>
+        <div id="kw-tiktok" class="loading">載入中...</div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
 const SUPABASE_URL='https://uxpbbcbclkragxbvkkze.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4cGJiY2JjbGtyYWd4YnZra3plIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyODY4NjksImV4cCI6MjA5Mjg2Mjg2OX0.ciZaeMtaDv_vpMRHN0SgEzLsWi-4AT-sS7leolQYC1w';
-const headers={'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'};
-let currentPlatform='instagram',currentDate='today',userName='';
 
-async function enterSite(){
-  const input=document.getElementById('nicknameInput');
-  const name=input.value.trim();
-  if(!name){input.focus();input.style.borderColor='var(--pink)';setTimeout(()=>input.style.borderColor='rgba(0,245,212,.3)',800);return;}
-  userName=name;
-  try{await fetch(SUPABASE_URL+'/rest/v1/visitors',{method:'POST',headers,body:JSON.stringify({nickname:name})});}catch(e){}
-  document.getElementById('userNameDisplay').textContent=name;
-  document.getElementById('welcomePage').style.display='none';
-  document.getElementById('mainPage').style.display='block';
+let currentPlatform='instagram';
+let dates={instagram:new Date(),threads:new Date(),tiktok:new Date()};
+
+// 星星
+(function(){
+  const s=document.getElementById('stars');
+  for(let i=0;i<120;i++){
+    const el=document.createElement('div');
+    el.className='star';
+    const size=Math.random()*2.5+0.5;
+    el.style.cssText=`width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*4}s;animation-delay:${Math.random()*4}s`;
+    s.appendChild(el);
+  }
+})();
+
+// 時鐘
+setInterval(()=>{
+  const n=new Date();
+  document.getElementById('clock').textContent=n.toLocaleTimeString('zh-TW');
+},1000);
+
+// 進入
+function enterSite(){
+  const nick=document.getElementById('nickname').value.trim();
+  if(!nick){document.getElementById('nickname').focus();return;}
+  document.getElementById('greeting').textContent='👋 '+nick;
+  document.getElementById('welcome').style.display='none';
+  document.getElementById('main').style.display='block';
+  recordVisitor(nick);
   loadAll();
 }
-document.getElementById('nicknameInput').addEventListener('keydown',e=>{if(e.key==='Enter')enterSite()});
+document.getElementById('nickname').addEventListener('keydown',e=>{if(e.key==='Enter')enterSite();});
 
-function formatNum(n){if(!n||n===0)return'-';if(n>=10000)return(n/10000).toFixed(1)+'萬';if(n>=1000)return(n/1000).toFixed(1)+'K';return n.toLocaleString();}
-function today(){return new Date().toISOString().slice(0,10)}
-async function fetchJSON(path){const r=await fetch(SUPABASE_URL+'/rest/v1/'+path,{headers});return r.json();}
-function getThumbIcon(p){return p==='threads'?'🧵':'▶';}
-function getViewLabel(p){return p==='threads'?'瀏覽':'觀看';}
-
-async function loadDates(){
-  const data=await fetchJSON('videos?select=fetch_date&platform=eq.'+currentPlatform+'&order=fetch_date.desc&limit=1000');
-  const dates=[...new Set(data.map(d=>d.fetch_date))].slice(0,7);
-  const el=document.getElementById('dateTabs');
-  el.innerHTML='<button class="date-tab active" onclick="switchDate(\'today\',this)">今日</button>';
-  dates.forEach(d=>{if(d!==today()){const b=document.createElement('button');b.className='date-tab';b.textContent=d.slice(5);b.onclick=function(){switchDate(d,this)};el.appendChild(b);}});
+async function recordVisitor(nick){
+  await fetch(`${SUPABASE_URL}/rest/v1/visitors`,{
+    method:'POST',
+    headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'},
+    body:JSON.stringify({nickname:nick})
+  });
 }
 
-async function loadRanking(){
-  const el=document.getElementById('rankList');
-  el.innerHTML='<div class="loading"><div class="spinner"></div>載入中...</div>';
-  const date=currentDate==='today'?today():currentDate;
-  const limit=currentPlatform==='threads'?100:50;
-  const data=await fetchJSON('videos?select=*&platform=eq.'+currentPlatform+'&fetch_date=eq.'+date+'&order=views.desc&limit='+limit);
-  if(!data||!data.length){el.innerHTML='<div class="empty">暫無資料</div>';return;}
-  document.getElementById('sectionTitle').textContent='即時熱門榜 TOP '+data.length;
-  el.innerHTML=data.map((v,i)=>{
-    const rc=i===0?'r1':i===1?'r2':i===2?'r3':'rn';
-    const top=i<3?' top3':'';
-    const tags=(v.hashtags||[]).slice(0,3).map(t=>'<span class="tag">'+t+'</span>').join('');
-    const cap=v.caption?v.caption.slice(0,40)+'...':'（無說明文字）';
-    const lr=v.likes>0?'<div class="stat-item">❤ <span>'+formatNum(v.likes)+'</span></div>':'';
-    const cr=v.comments>0?'<div class="stat-item">💬 <span>'+formatNum(v.comments)+'</span></div>':'';
-    return`<a class="rank-item${top}" href="${v.video_url}" target="_blank"><div class="rank-num ${rc}">${i+1}</div><div class="thumb">${getThumbIcon(currentPlatform)}</div><div class="rank-info"><div class="rank-account">${v.account_name||'@unknown'}</div><div class="rank-caption">${cap}</div><div class="rank-tags">${tags}</div></div><div class="rank-stats"><div class="views-num">${formatNum(v.views)}</div><div class="views-label">${getViewLabel(currentPlatform)}</div><div class="stat-row">${lr}${cr}</div></div></a>`;
+// 切換平台
+function switchPlatform(p){
+  currentPlatform=p;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+p).classList.add('active');
+  document.querySelectorAll('.content').forEach(c=>c.classList.remove('active'));
+  document.getElementById('content-'+p).classList.add('active');
+}
+
+// 日期切換
+function changeDate(p,d){
+  const dt=new Date(dates[p]);
+  dt.setDate(dt.getDate()+d);
+  if(dt>new Date())return;
+  dates[p]=dt;
+  loadPlatform(p);
+}
+
+function fmtDate(d){return d.toISOString().slice(0,10);}
+function fmtDateDisplay(d){return `${d.getMonth()+1}/${d.getDate()}`;}
+
+async function apiFetch(path){
+  const r=await fetch(`${SUPABASE_URL}/rest/v1/${path}`,{
+    headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}
+  });
+  return r.json();
+}
+
+function fmtNum(n){
+  if(!n||n===0)return '-';
+  if(n>=1000000)return (n/1000000).toFixed(1)+'M';
+  if(n>=10000)return (n/10000).toFixed(1)+'萬';
+  if(n>=1000)return (n/1000).toFixed(1)+'K';
+  return n.toLocaleString();
+}
+
+function fmtPub(pub){
+  if(!pub)return '';
+  const d=new Date(pub);
+  if(isNaN(d))return pub;
+  return `${d.getMonth()+1}/${d.getDate()}`;
+}
+
+function renderList(platform,videos){
+  const el=document.getElementById('list-'+platform);
+  if(!videos||videos.length===0){el.innerHTML='<div class="empty">暫無資料</div>';return;}
+  el.innerHTML=videos.map((v,i)=>{
+    const rankClass=i===0?'top1':i===1?'top2':i===2?'top3':'';
+    const htags=(v.hashtags||[]).slice(0,4).map(h=>`<span class="hashtag">${h}</span>`).join('');
+    const viewLabel=platform==='tiktok'?'讚':platform==='threads'?'瀏覽':'觀看';
+    return `<a class="video-card" href="${v.video_url||v.account_url}" target="_blank">
+      <div class="rank-num ${rankClass}">${i+1}</div>
+      <div class="card-info">
+        <div class="account-name">${v.account_name||''}</div>
+        <div class="caption">${v.caption||'無說明文字'}</div>
+        ${htags?`<div class="hashtags">${htags}</div>`:''}
+        <div class="stats">
+          <span class="stat">👁 ${viewLabel} ${fmtNum(v.views)}</span>
+          ${v.likes?`<span class="stat">❤️ ${fmtNum(v.likes)}</span>`:''}
+          ${v.comments?`<span class="stat">💬 ${fmtNum(v.comments)}</span>`:''}
+        </div>
+      </div>
+      <div class="pub-date">${fmtPub(v.published_at)}</div>
+    </a>`;
   }).join('');
 }
 
-async function loadKeywords(){
-  const el=document.getElementById('keywordList');
-  const date=currentDate==='today'?today():currentDate;
-  const data=await fetchJSON('keyword_stats?select=keyword,count&platform=eq.'+currentPlatform+'&date=eq.'+date+'&order=count.desc&limit=20');
-  if(!data||!data.length){el.innerHTML='<div style="color:var(--text2);font-size:.8rem">暫無資料</div>';return;}
-  const max=data[0].count||1;
-  el.innerHTML=data.map((k,i)=>`<div class="kw-item"><div class="kw-rank">${i+1}</div><div class="kw-text">#${k.keyword}</div><div class="kw-bar-wrap"><div class="kw-bar" style="width:${Math.round(k.count/max*100)}%"></div></div><div class="kw-count">${k.count}</div></div>`).join('');
+function renderTop10(platform,videos){
+  const el=document.getElementById('top10-'+platform);
+  if(!videos||videos.length===0){el.innerHTML='<div class="empty">暫無資料</div>';return;}
+  el.innerHTML=videos.slice(0,10).map((v,i)=>`
+    <a class="top10-item" href="${v.video_url||v.account_url}" target="_blank">
+      <span class="top10-rank" style="color:${i<3?'var(--gold)':'var(--text2)'}">${i+1}</span>
+      <div class="top10-info">
+        <div class="top10-name">${v.account_name||''}</div>
+        <div class="top10-views">${fmtNum(v.views)}</div>
+      </div>
+    </a>`).join('');
 }
 
-async function loadDaily(){
-  const el=document.getElementById('dailyList');
-  const data=await fetchJSON('videos?select=account_name,views,video_url&platform=eq.'+currentPlatform+'&fetch_date=eq.'+today()+'&order=views.desc&limit=10');
-  if(!data||!data.length){el.innerHTML='<div style="color:var(--text2);font-size:.8rem">暫無資料</div>';return;}
-  el.innerHTML=data.map((v,i)=>`<a class="daily-item" href="${v.video_url}" target="_blank"><div class="daily-num">${i+1}</div><div class="daily-acc">${v.account_name||'@unknown'}</div><div class="daily-views">${formatNum(v.views)}</div></a>`).join('');
+function renderKeywords(platform,kws){
+  const el=document.getElementById('kw-'+platform);
+  if(!kws||kws.length===0){el.innerHTML='<div class="empty">暫無資料</div>';return;}
+  const max=kws[0].count||1;
+  el.innerHTML=kws.slice(0,15).map((k,i)=>`
+    <div class="kw-item">
+      <span class="kw-rank">${i+1}</span>
+      <span class="kw-text">#${k.keyword}</span>
+      <div class="kw-bar-wrap"><div class="kw-bar" style="width:${Math.round(k.count/max*100)}%"></div></div>
+      <span class="kw-count">${k.count}</span>
+    </div>`).join('');
 }
 
-function switchPlatform(p,btn){currentPlatform=p;currentDate='today';document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');loadAll();}
-function switchDate(d,btn){currentDate=d;document.querySelectorAll('.date-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');loadRanking();loadKeywords();}
-async function loadAll(){await loadDates();loadRanking();loadKeywords();loadDaily();}
-function updateClock(){document.getElementById('clock').textContent=new Date().toLocaleTimeString('zh-TW',{hour12:false});}
-updateClock();
-setInterval(updateClock,1000);
-setInterval(loadAll,120000);
+async function loadPlatform(p){
+  const dateStr=fmtDate(dates[p]);
+  document.getElementById('date-'+p).textContent=fmtDateDisplay(dates[p]);
+  document.getElementById('list-'+p).innerHTML='<div class="loading">載入中...</div>';
+
+  // 取最新一次爬取的資料
+  const videos=await apiFetch(`videos?platform=eq.${p}&fetch_date=eq.${dateStr}&order=views.desc&limit=50&select=*`);
+  renderList(p,videos);
+
+  // 今日前十
+  const top10=await apiFetch(`videos?platform=eq.${p}&fetch_date=eq.${fmtDate(new Date())}&order=views.desc&limit=10&select=*`);
+  renderTop10(p,top10);
+
+  // 關鍵詞
+  const kws=await apiFetch(`keyword_stats?platform=eq.${p}&date=eq.${fmtDate(new Date())}&order=count.desc&limit=15`);
+  renderKeywords(p,kws);
+}
+
+function loadAll(){
+  ['instagram','threads','tiktok'].forEach(p=>{
+    document.getElementById('date-'+p).textContent=fmtDateDisplay(dates[p]);
+    loadPlatform(p);
+  });
+}
 </script>
 </body>
 </html>
