@@ -396,11 +396,11 @@ async function loadPlatform(p){
   renderList(p,videos);
 
   // 今日前十
-  const top10=await apiFetch(`videos?platform=eq.${p}&fetch_date=eq.${fmtDate(new Date())}&order=views.desc&limit=10&select=*`);
+  const top10=await apiFetch(`videos?platform=eq.${p}&order=views.desc&limit=10&select=*&fetched_at=eq.${encodeURIComponent(latestTime)}`);
   renderTop10(p,top10);
 
   // 關鍵詞
-  const kws=await apiFetch(`keyword_stats?platform=eq.${p}&date=eq.${fmtDate(new Date())}&order=count.desc&limit=15`);
+  const kws=await apiFetch(`keyword_stats?platform=eq.${p}&order=count.desc&limit=15&date=eq.${dateStr}`);
   renderKeywords(p,kws);
 }
 
