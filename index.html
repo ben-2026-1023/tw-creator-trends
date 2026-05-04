@@ -392,7 +392,7 @@ async function loadPlatform(p){
   document.getElementById('list-'+p).innerHTML='<div class="loading">載入中...</div>';
 
   // 取最新一次爬取的資料
-  const videos=await apiFetch(`videos?platform=eq.${p}&fetch_date=eq.${dateStr}&order=views.desc&limit=50&select=*`);
+  const latest=await apiFetch(`videos?platform=eq.${p}&order=fetched_at.desc&limit=1&select=fetched_at`); const latestTime=latest&&latest[0]?latest[0].fetched_at:''; const videos=latestTime?await apiFetch(`videos?platform=eq.${p}&fetched_at=eq.${encodeURIComponent(latestTime)}&order=views.desc&limit=50&select=*`):[];
   renderList(p,videos);
 
   // 今日前十
