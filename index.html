@@ -400,7 +400,7 @@ async function loadPlatform(p){
   renderTop10(p,top10);
 
   // 關鍵詞
-  const kws=await apiFetch(`keyword_stats?platform=eq.${p}&order=count.desc&limit=15&date=eq.${dateStr}`);
+  const kws=await apiFetch(`keyword_stats?platform=eq.${p}&order=count.desc&limit=15`);
   renderKeywords(p,kws);
 }
 
