@@ -6,33 +6,15 @@
 <title>台灣自媒體流量情報站</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Grotesk:wght@400;600;700&display=swap');
-  :root {
-    --bg: #0a0a0f;
-    --surface: #12121a;
-    --surface2: #1a1a26;
-    --border: rgba(255,255,255,0.08);
-    --text: #e8e8f0;
-    --text2: #8888aa;
-    --ig: #e1306c;
-    --threads: #ffffff;
-    --tiktok: #fe2c55;
-    --accent: #00d4ff;
-    --gold: #ffd700;
-  }
+  :root{--bg:#0a0a0f;--surface:#12121a;--surface2:#1a1a26;--border:rgba(255,255,255,0.08);--text:#e8e8f0;--text2:#8888aa;--accent:#00d4ff;--gold:#ffd700}
   *{margin:0;padding:0;box-sizing:border-box}
   body{background:var(--bg);color:var(--text);font-family:'Noto Sans TC',sans-serif;min-height:100vh;overflow-x:hidden}
-
-  /* 地球背景 */
   #earthImg{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:80vmin;height:80vmin;z-index:0;animation:earthSpin 30s linear infinite;opacity:0.15;pointer-events:none}
   #earthImg img{width:100%;height:100%;border-radius:50%;object-fit:cover}
   @keyframes earthSpin{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
-
-  /* 星星 */
   .stars{position:fixed;inset:0;z-index:0;pointer-events:none}
   .star{position:absolute;background:#fff;border-radius:50%;animation:twinkle var(--d,3s) ease-in-out infinite}
   @keyframes twinkle{0%,100%{opacity:0.1}50%{opacity:0.8}}
-
-  /* 歡迎頁 */
   #welcome{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px}
   #welcome h1{font-size:clamp(1.5rem,4vw,2.5rem);font-weight:900;background:linear-gradient(135deg,var(--accent),#7b61ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;padding:0 20px}
   #welcome p{color:var(--text2);font-size:0.95rem}
@@ -41,56 +23,35 @@
   #nickname:focus{border-color:var(--accent)}
   #enter-btn{background:linear-gradient(135deg,var(--accent),#7b61ff);border:none;color:#000;padding:12px 28px;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.2s}
   #enter-btn:hover{opacity:0.85}
-
-  /* 主體 */
   #main{position:relative;z-index:1;display:none;padding:0 0 60px}
-  
-  /* Header */
   header{padding:20px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:rgba(10,10,15,0.8);backdrop-filter:blur(12px);position:sticky;top:0;z-index:10}
   .logo{font-size:1.1rem;font-weight:900;background:linear-gradient(135deg,var(--accent),#7b61ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
   #clock{font-size:0.8rem;color:var(--text2);font-family:'Space Grotesk',sans-serif}
   #greeting{font-size:0.85rem;color:var(--accent)}
-
-  /* 平台 tabs */
   .tabs{display:flex;gap:8px;padding:20px 24px 0;overflow-x:auto}
   .tab{display:flex;align-items:center;gap:8px;padding:10px 20px;border-radius:12px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-size:0.9rem;font-weight:500;color:var(--text2);transition:all 0.2s;white-space:nowrap;font-family:inherit}
   .tab img{width:20px;height:20px;object-fit:contain;border-radius:4px}
   .tab.active{background:var(--surface2);color:var(--text);border-color:var(--accent)}
   .tab:hover{border-color:rgba(0,212,255,0.4)}
-
-  /* 內容區 */
   .content{display:none;padding:20px 24px;gap:20px}
   .content.active{display:grid;grid-template-columns:1fr 300px}
   @media(max-width:900px){.content.active{grid-template-columns:1fr}}
-
-  /* 排行榜區 */
   .rankings-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
   .rankings-title{font-size:1rem;font-weight:700;color:var(--text)}
   .update-time{font-size:0.75rem;color:var(--text2)}
-  .rank-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.3);color:var(--accent);padding:4px 10px;border-radius:20px;font-size:0.72rem}
-
-  /* 影片卡片 */
   .video-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px;display:flex;gap:14px;cursor:pointer;transition:all 0.2s;margin-bottom:10px;text-decoration:none;color:inherit}
   .video-card:hover{border-color:rgba(0,212,255,0.4);background:var(--surface2);transform:translateY(-1px)}
   .rank-num{font-size:1.4rem;font-weight:900;color:var(--text2);min-width:36px;text-align:center;font-family:'Space Grotesk',sans-serif;line-height:1}
-  .rank-num.top1{color:var(--gold)}
-  .rank-num.top2{color:#c0c0c0}
-  .rank-num.top3{color:#cd7f32}
+  .rank-num.top1{color:var(--gold)}.rank-num.top2{color:#c0c0c0}.rank-num.top3{color:#cd7f32}
   .card-info{flex:1;min-width:0}
   .account-name{font-weight:700;font-size:0.95rem;margin-bottom:4px;color:var(--accent)}
   .caption{font-size:0.82rem;color:var(--text2);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.5;margin-bottom:8px}
   .hashtags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
   .hashtag{background:rgba(123,97,255,0.15);color:#9d84ff;padding:2px 8px;border-radius:20px;font-size:0.72rem}
   .stats{display:flex;gap:12px;font-size:0.78rem;color:var(--text2)}
-  .stat{display:flex;align-items:center;gap:4px}
   .pub-date{font-size:0.72rem;color:var(--text2);margin-left:auto;align-self:flex-start;white-space:nowrap}
-
-  /* 右側欄 */
-  .sidebar{}
   .sidebar-section{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:16px}
   .sidebar-title{font-size:0.85rem;font-weight:700;margin-bottom:12px;color:var(--text)}
-  
-  /* 關鍵詞 */
   .kw-item{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--border)}
   .kw-item:last-child{border-bottom:none}
   .kw-rank{font-size:0.72rem;color:var(--text2);min-width:20px;font-family:'Space Grotesk',sans-serif}
@@ -98,39 +59,26 @@
   .kw-bar-wrap{width:60px;height:4px;background:var(--border);border-radius:2px}
   .kw-bar{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent),#7b61ff)}
   .kw-count{font-size:0.72rem;color:var(--text2);min-width:28px;text-align:right;font-family:'Space Grotesk',sans-serif}
-
-  /* 日榜 */
-  .top10-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);cursor:pointer;text-decoration:none;color:inherit}
+  .top10-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);text-decoration:none;color:inherit}
   .top10-item:last-child{border-bottom:none}
   .top10-item:hover .top10-name{color:var(--accent)}
   .top10-rank{font-size:0.75rem;font-weight:700;min-width:22px;font-family:'Space Grotesk',sans-serif}
   .top10-info{flex:1;min-width:0}
   .top10-name{font-size:0.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .top10-views{font-size:0.72rem;color:var(--text2);font-family:'Space Grotesk',sans-serif}
-
-  /* 日期切換 */
   .date-nav{display:flex;align-items:center;gap:8px;margin-bottom:16px}
   .date-btn{background:var(--surface);border:1px solid var(--border);color:var(--text2);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:0.8rem;font-family:inherit}
   .date-btn:hover{border-color:var(--accent);color:var(--accent)}
   .date-label{font-size:0.85rem;color:var(--text);font-weight:600}
-
-  /* Loading */
   .loading{text-align:center;padding:40px;color:var(--text2);font-size:0.9rem}
   .empty{text-align:center;padding:40px;color:var(--text2);font-size:0.85rem}
-
-  /* TikTok 標示 */
   .tiktok-note{font-size:0.72rem;color:var(--text2);background:rgba(254,44,85,0.1);border:1px solid rgba(254,44,85,0.3);padding:6px 12px;border-radius:8px;margin-bottom:12px;display:inline-block}
 </style>
 </head>
 <body>
-
-<!-- 星星 -->
 <div class="stars" id="stars"></div>
-
-<!-- 地球 -->
 <div id="earthImg"><img src="dc8c969f838e3beeb1d593c57f9ec33c.jpg" alt="earth"></div>
 
-<!-- 歡迎頁 -->
 <div id="welcome">
   <h1>🌍 台灣自媒體流量情報站</h1>
   <p>請輸入你的暱稱來開始使用</p>
@@ -140,7 +88,6 @@
   </div>
 </div>
 
-<!-- 主體 -->
 <div id="main">
   <header>
     <div class="logo">📊 台灣自媒體流量情報</div>
@@ -149,101 +96,52 @@
       <span id="clock"></span>
     </div>
   </header>
-
   <div class="tabs">
-    <div class="tab active" onclick="switchPlatform('instagram')" id="tab-instagram">
-      <img src="ig-logo.png" alt="IG"> Instagram
-    </div>
-    <div class="tab" onclick="switchPlatform('threads')" id="tab-threads">
-      <img src="threads-logo.png" alt="Threads" style="border-radius:50%"> Threads
-    </div>
-    <div class="tab" onclick="switchPlatform('tiktok')" id="tab-tiktok">
-      <img src="tiktok-logo.png" alt="TikTok"> TikTok
-    </div>
+    <div class="tab active" onclick="switchPlatform('instagram')" id="tab-instagram"><img src="ig-logo.png" alt="IG"> Instagram</div>
+    <div class="tab" onclick="switchPlatform('threads')" id="tab-threads"><img src="threads-logo.png" alt="Threads" style="border-radius:50%"> Threads</div>
+    <div class="tab" onclick="switchPlatform('tiktok')" id="tab-tiktok"><img src="tiktok-logo.png" alt="TikTok"> TikTok</div>
   </div>
 
-  <!-- IG 內容 -->
   <div class="content active" id="content-instagram">
     <div>
       <div class="rankings-header">
-        <div>
-          <div class="rankings-title">🔥 本週 Instagram Reels 熱門榜</div>
-          <div class="update-time">每2小時更新 · 僅顯示7天內發布</div>
-        </div>
-        <div class="date-nav">
-          <button class="date-btn" onclick="changeDate('instagram',-1)">◀</button>
-          <span class="date-label" id="date-instagram"></span>
-          <button class="date-btn" onclick="changeDate('instagram',1)">▶</button>
-        </div>
+        <div><div class="rankings-title">🔥 本週 Instagram Reels 熱門榜</div><div class="update-time">每2小時更新 · 僅顯示7天內發布</div></div>
+        <div class="date-nav"><button class="date-btn" onclick="changeDate('instagram',-1)">◀</button><span class="date-label" id="date-instagram"></span><button class="date-btn" onclick="changeDate('instagram',1)">▶</button></div>
       </div>
       <div id="list-instagram" class="loading">載入中...</div>
     </div>
     <div class="sidebar">
-      <div class="sidebar-section">
-        <div class="sidebar-title">🏆 今日前十名</div>
-        <div id="top10-instagram" class="loading">載入中...</div>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-title">🔑 熱門關鍵詞</div>
-        <div id="kw-instagram" class="loading">載入中...</div>
-      </div>
+      <div class="sidebar-section"><div class="sidebar-title">🏆 今日前十名</div><div id="top10-instagram" class="loading">載入中...</div></div>
+      <div class="sidebar-section"><div class="sidebar-title">🔑 熱門關鍵詞</div><div id="kw-instagram" class="loading">載入中...</div></div>
     </div>
   </div>
 
-  <!-- Threads 內容 -->
   <div class="content" id="content-threads">
     <div>
       <div class="rankings-header">
-        <div>
-          <div class="rankings-title">🔥 本週 Threads 熱門榜</div>
-          <div class="update-time">每2小時更新 · 僅顯示7天內發布 · 依瀏覽數排行</div>
-        </div>
-        <div class="date-nav">
-          <button class="date-btn" onclick="changeDate('threads',-1)">◀</button>
-          <span class="date-label" id="date-threads"></span>
-          <button class="date-btn" onclick="changeDate('threads',1)">▶</button>
-        </div>
+        <div><div class="rankings-title">🔥 本週 Threads 熱門榜</div><div class="update-time">每2小時更新 · 僅顯示7天內發布 · 依瀏覽數排行</div></div>
+        <div class="date-nav"><button class="date-btn" onclick="changeDate('threads',-1)">◀</button><span class="date-label" id="date-threads"></span><button class="date-btn" onclick="changeDate('threads',1)">▶</button></div>
       </div>
       <div id="list-threads" class="loading">載入中...</div>
     </div>
     <div class="sidebar">
-      <div class="sidebar-section">
-        <div class="sidebar-title">🏆 今日前十名</div>
-        <div id="top10-threads" class="loading">載入中...</div>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-title">🔑 熱門關鍵詞</div>
-        <div id="kw-threads" class="loading">載入中...</div>
-      </div>
+      <div class="sidebar-section"><div class="sidebar-title">🏆 今日前十名</div><div id="top10-threads" class="loading">載入中...</div></div>
+      <div class="sidebar-section"><div class="sidebar-title">🔑 熱門關鍵詞</div><div id="kw-threads" class="loading">載入中...</div></div>
     </div>
   </div>
 
-  <!-- TikTok 內容 -->
   <div class="content" id="content-tiktok">
     <div>
       <div class="rankings-header">
-        <div>
-          <div class="rankings-title">🔥 本週 TikTok 熱門榜</div>
-          <div class="update-time">每2小時更新 · 僅顯示7天內發布</div>
-        </div>
-        <div class="date-nav">
-          <button class="date-btn" onclick="changeDate('tiktok',-1)">◀</button>
-          <span class="date-label" id="date-tiktok"></span>
-          <button class="date-btn" onclick="changeDate('tiktok',1)">▶</button>
-        </div>
+        <div><div class="rankings-title">🔥 本週 TikTok 熱門榜</div><div class="update-time">每2小時更新 · 僅顯示14天內發布</div></div>
+        <div class="date-nav"><button class="date-btn" onclick="changeDate('tiktok',-1)">◀</button><span class="date-label" id="date-tiktok"></span><button class="date-btn" onclick="changeDate('tiktok',1)">▶</button></div>
       </div>
       <div class="tiktok-note">⚠️ TikTok 依讚數排行</div>
       <div id="list-tiktok" class="loading">載入中...</div>
     </div>
     <div class="sidebar">
-      <div class="sidebar-section">
-        <div class="sidebar-title">🏆 今日前十名</div>
-        <div id="top10-tiktok" class="loading">載入中...</div>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-title">🔑 熱門關鍵詞</div>
-        <div id="kw-tiktok" class="loading">載入中...</div>
-      </div>
+      <div class="sidebar-section"><div class="sidebar-title">🏆 今日前十名</div><div id="top10-tiktok" class="loading">載入中...</div></div>
+      <div class="sidebar-section"><div class="sidebar-title">🔑 熱門關鍵詞</div><div id="kw-tiktok" class="loading">載入中...</div></div>
     </div>
   </div>
 </div>
@@ -251,49 +149,35 @@
 <script>
 const SUPABASE_URL='https://uxpbbcbclkragxbvkkze.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4cGJiY2JjbGtyYWd4YnZra3plIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyODY4NjksImV4cCI6MjA5Mjg2Mjg2OX0.ciZaeMtaDv_vpMRHN0SgEzLsWi-4AT-sS7leolQYC1w';
-
 let currentPlatform='instagram';
 let dates={instagram:new Date(),threads:new Date(),tiktok:new Date()};
 
-// 星星
 (function(){
   const s=document.getElementById('stars');
   for(let i=0;i<120;i++){
-    const el=document.createElement('div');
-    el.className='star';
+    const el=document.createElement('div');el.className='star';
     const size=Math.random()*2.5+0.5;
     el.style.cssText=`width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*4}s;animation-delay:${Math.random()*4}s`;
     s.appendChild(el);
   }
 })();
 
-// 時鐘
-setInterval(()=>{
-  const n=new Date();
-  document.getElementById('clock').textContent=n.toLocaleTimeString('zh-TW');
-},1000);
+setInterval(()=>{document.getElementById('clock').textContent=new Date().toLocaleTimeString('zh-TW');},1000);
 
-// 進入
 function enterSite(){
   const nick=document.getElementById('nickname').value.trim();
   if(!nick){document.getElementById('nickname').focus();return;}
   document.getElementById('greeting').textContent='👋 '+nick;
   document.getElementById('welcome').style.display='none';
   document.getElementById('main').style.display='block';
-  recordVisitor(nick);
-  loadAll();
+  recordVisitor(nick);loadAll();
 }
 document.getElementById('nickname').addEventListener('keydown',e=>{if(e.key==='Enter')enterSite();});
 
 async function recordVisitor(nick){
-  await fetch(`${SUPABASE_URL}/rest/v1/visitors`,{
-    method:'POST',
-    headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'},
-    body:JSON.stringify({nickname:nick})
-  });
+  await fetch(`${SUPABASE_URL}/rest/v1/visitors`,{method:'POST',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify({nickname:nick})});
 }
 
-// 切換平台
 function switchPlatform(p){
   currentPlatform=p;
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -302,22 +186,16 @@ function switchPlatform(p){
   document.getElementById('content-'+p).classList.add('active');
 }
 
-// 日期切換
 function changeDate(p,d){
-  const dt=new Date(dates[p]);
-  dt.setDate(dt.getDate()+d);
+  const dt=new Date(dates[p]);dt.setDate(dt.getDate()+d);
   if(dt>new Date())return;
-  dates[p]=dt;
-  loadPlatform(p);
+  dates[p]=dt;loadPlatform(p);
 }
 
-function fmtDate(d){return d.toISOString().slice(0,10);}
 function fmtDateDisplay(d){return `${d.getMonth()+1}/${d.getDate()}`;}
 
 async function apiFetch(path){
-  const r=await fetch(`${SUPABASE_URL}/rest/v1/${path}`,{
-    headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}
-  });
+  const r=await fetch(`${SUPABASE_URL}/rest/v1/${path}`,{headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
   return r.json();
 }
 
@@ -350,9 +228,9 @@ function renderList(platform,videos){
         <div class="caption">${v.caption||'無說明文字'}</div>
         ${htags?`<div class="hashtags">${htags}</div>`:''}
         <div class="stats">
-          <span class="stat">👁 ${viewLabel} ${fmtNum(v.views)}</span>
-          ${v.likes?`<span class="stat">❤️ ${fmtNum(v.likes)}</span>`:''}
-          ${v.comments?`<span class="stat">💬 ${fmtNum(v.comments)}</span>`:''}
+          <span>👁 ${viewLabel} ${fmtNum(v.views)}</span>
+          ${v.likes?`<span style="margin-left:12px">❤️ ${fmtNum(v.likes)}</span>`:''}
+          ${v.comments?`<span style="margin-left:12px">💬 ${fmtNum(v.comments)}</span>`:''}
         </div>
       </div>
       <div class="pub-date">${fmtPub(v.published_at)}</div>
@@ -387,20 +265,22 @@ function renderKeywords(platform,kws){
 }
 
 async function loadPlatform(p){
-  const dateStr=fmtDate(dates[p]);
   document.getElementById('date-'+p).textContent=fmtDateDisplay(dates[p]);
   document.getElementById('list-'+p).innerHTML='<div class="loading">載入中...</div>';
 
-  // 取最新一次爬取的資料
-  const latest=await apiFetch(`videos?platform=eq.${p}&order=fetched_at.desc&limit=1&select=fetched_at`); const latestTime=latest&&latest[0]?latest[0].fetched_at:''; const videos=latestTime?await apiFetch(`videos?platform=eq.${p}&fetched_at=eq.${encodeURIComponent(latestTime)}&order=views.desc&limit=50&select=*`):[];
+  // 抓最新一次爬取的資料
+  const latest=await apiFetch(`videos?platform=eq.${p}&order=fetched_at.desc&limit=1&select=fetched_at`);
+  const latestTime=latest&&latest[0]?latest[0].fetched_at:'';
+  const videos=latestTime?await apiFetch(`videos?platform=eq.${p}&fetched_at=eq.${encodeURIComponent(latestTime)}&order=views.desc&limit=50&select=*`):[];
   renderList(p,videos);
 
-  // 今日前十
-  const top10=await apiFetch(`videos?platform=eq.${p}&order=views.desc&limit=10&select=*&fetched_at=eq.${encodeURIComponent(latestTime)}`);
-  renderTop10(p,top10);
+  // 今日前十（同一批資料）
+  renderTop10(p,videos);
 
-  // 關鍵詞
-  const today=new Date(); today.setHours(today.getHours()-8); const utcDate=today.toISOString().slice(0,10); const kws=await apiFetch(`keyword_stats?platform=eq.${p}&date=eq.${utcDate}&order=count.desc&limit=15`);
+  // 關鍵詞（抓最新日期）
+  const latestKw=await apiFetch(`keyword_stats?platform=eq.${p}&order=date.desc&limit=1&select=date`);
+  const kwDate=latestKw&&latestKw[0]?latestKw[0].date:'';
+  const kws=kwDate?await apiFetch(`keyword_stats?platform=eq.${p}&date=eq.${kwDate}&order=count.desc&limit=15`):[];
   renderKeywords(p,kws);
 }
 
